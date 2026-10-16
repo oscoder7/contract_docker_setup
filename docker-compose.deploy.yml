@@ -1,0 +1,28 @@
+services:
+  contract_app:
+    image: contract_docker_setup-contract_app:latest
+    container_name: contract_ui_admin
+    env_file:
+      - .env
+    ports:
+      - "5001:5000"
+    environment:
+      - TEMPLATE_DIR=/app/uploaded_templates
+      - FASTAPI_BASE_URL=http://doc_service:8000
+    volumes:
+      - ./app/uploaded_templates:/app/uploaded_templates
+      - ./app/instance:/app/instance
+
+  doc_service:
+    image: contract_docker_setup-doc_service:latest
+    container_name: doc_service_api
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    environment:
+      - TEMPLATE_DIR=/app/uploaded_templates
+      - API_CONFIG_PATH=/app/api_mapper/template_api_map.json
+    volumes:
+      - ./app/uploaded_templates:/app/uploaded_templates
+      - ./app/api_mapper/template_api_map.json:/app/api_mapper/template_api_map.json

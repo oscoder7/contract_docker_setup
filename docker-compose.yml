@@ -4,22 +4,30 @@ services:
       context: ../flask_contract_app
       dockerfile: Dockerfile
     container_name: contract_ui_admin
+    env_file:
+      - .env
     ports:
-      - "5000:5000"
+      - "5001:5000"
     environment:
       - TEMPLATE_DIR=/app/uploaded_templates
       - FASTAPI_BASE_URL=http://doc_service:8000
     volumes:
-      - ../flask_contract_app/uploaded_templates:/app/uploaded_templates
+      - ./app/uploaded_templates:/app/uploaded_templates
+      - ./app/instance:/app/instance
 
   doc_service:
     build:
       context: ../fastapi_doc_service
       dockerfile: Dockerfile
     container_name: doc_service_api
+    # Automatically loads all variables from contract_docker_setup/.env
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     environment:
       - TEMPLATE_DIR=/app/uploaded_templates
+      - API_CONFIG_PATH=/app/api_mapper/template_api_map.json
     volumes:
-      - ../flask_contract_app/uploaded_templates:/app/uploaded_templates
+      - ./app/uploaded_templates:/app/uploaded_templates
+      - ./app/api_mapper/template_api_map.json:/app/api_mapper/template_api_map.json
