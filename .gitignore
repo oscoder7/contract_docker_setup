@@ -1,1 +1,4 @@
 .env
+contract_app.tar
+doc_service.tar
+*.tar
